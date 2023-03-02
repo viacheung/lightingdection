@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          name="viewport"/>
+    <title>产品图片管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/chanpinPhoto.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //用于search.js自动补全
+        var _value = 'name';
+        //用于crud.js的esayui初始参数
+        var title = '产品类别图片管理';
+        var idField = 'id';
+        var height = 300;
+        var width = 300;
+        var columns = [[{
+            field: 'location',
+            title: '位置',
+            width: 100
+        }, {
+            field: 'leibie',
+            title: '产品类别名',
+            width: 100
+        }, {
+            field: 'name',
+            title: '文件名',
+            width: 100
+        }, {
+            field: 'url',
+            title: '位置',
+            width: 150
+        },]];
+    </script>
+</head>
+<body class="easyui-layout">
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table id="grid"></table>
+</div>
+<!-- 添加、修改 -->
+<!-- 修改 -->
+<div class="easyui-window" data-options="closed:true" id="editDlg">
+    <form id="editForm">
+        <input id="input_id" name="id" type="hidden">
+        <table>
+            <tr>
+                <td>产品类别编号</td>
+                <td><input id="input_chanpinId" name="chanpinId" readonly type="text"></td>
+            </tr>
+            <tr>
+                <td>图片名</td>
+                <td><input id="input_name" name="name" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>图片路径</td>
+                <td><input id="input_url" name="url" readonly type="text"></td>
+            </tr>
+
+        </table>
+        <button id="btnSave" type="button">保存</button>
+    </form>
+</div>
+<!-- 导入窗口 -->
+<div class="easyui-window" id="importDlg">
+    <form enctype="multipart/form-data" id="importForm">
+        <table>
+            <tr>
+                <td style="width:20%">产品编号</td>
+                <td>
+                    <input class="iInput" id="import_chanpinId" name="import_chanpinId">
+                    <select id="selectdChanpin"
+                            onchange="document.getElementById('import_chanpinId').value=this.value;document.getElementById('selectdChanpin').value=''"
+                            style="width:10%">
+
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width:20%">导入文件</td>
+                <td><input id="mfile" name="mfile" type="file">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    init1();
+
+    function init1() {
+        //var locations=admin.getAllSons('0');
+        var locations = null;
+        $.ajax({
+            url: "getAllLocations",
+            type: "post",
+            async: false, //此处需要注意的是要想获取ajax返回的值这个async属性必须设置成同步的，否则获取不到返回值
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                locations = data;
+            }
+        });
+        $("#selectdChanpin").empty();
+        var option = document.createElement("option");
+        $(option).val("");
+        $(option).text("--请选择产品类别--");
+        $('#selectdChanpin').append(option);
+        for (var i = 0; i < locations.length; i++) {
+            //var leibies=admin.getAllSons(locations.get(i).getId());
+            var leibies = null;
+            var loid = locations[i].id;
+            $.ajax({
+                url: "getAllLeibies",
+                type: "post",
+                async: false, //此处需要注意的是要想获取ajax返回的值这个async属性必须设置成同步的，否则获取不到返回值
+                data: {"locationId": loid},
+                dataType: "json",
+                success: function (data) {
+                    leibies = data;
+                }
+            });
+            for (var j = 0; j < leibies.length; j++) {
+                var leibie = leibies[j];
+                var option1 = document.createElement("option");
+                //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                $(option1).val(leibie.id);
+                //给option的text赋值,这就是你点开下拉框能够看到的东西
+                $(option1).text("区域:   " + locations[i].name + "  产品类别:   " + leibie.name);
+                //获取select 下拉框对象,并将option添加进select
+                $('#selectdChanpin').append(option1);
+
+            }
+        }
+    }
+</script>
+</body>
+</html>

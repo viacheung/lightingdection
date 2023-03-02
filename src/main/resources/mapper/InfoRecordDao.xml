@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.InfoRecordDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="findAll" resultType="com.nanjing.lightingdection.entity.InfoRecord">
+        SELECT * FROM InfoRecord
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test='chanpinId!=null'>
+                and chanpinId=#{chanpinId}
+            </if>
+            <if test='datameaningId!=null'>
+                and datameaningId=#{datameaningId}
+            </if>
+            <if test='startDate!=null'>
+                and time <![CDATA[ >= ]]>#{startDate}
+            </if>
+            <if test='endDate!=null'>
+                and time <![CDATA[ <= ]]>#{endDate}
+            </if>
+        </trim>
+        order by id ASC
+    </select>
+    <select id="getAll" resultType="com.nanjing.lightingdection.entity.InfoRecord">
+        SELECT * FROM InfoRecord where chanpinId=#{chanpinId} and datameaningId=#{datameaningId}
+    </select>
+    <select id="findById" resultType="com.nanjing.lightingdection.entity.InfoRecord">
+        SELECT * FROM InfoRecord where id=#{id}
+    </select>
+    <select id="findNewestRecord" resultType="com.nanjing.lightingdection.entity.InfoRecord">
+        SELECT * FROM InfoRecord where chanpinId=#{chanpinId} and datameaningId=#{datameaningId} ORDER by time DESC
+        LIMIT 1
+    </select>
+
+    <insert id="insertInfoRecord" parameterType="com.nanjing.lightingdection.entity.InfoRecord">
+        insert into InfoRecord
+        values
+        (null
+        <if test='chanpinId!=null'>
+            ,#{chanpinId}
+        </if>
+        <if test='chanpinId==null'>
+            ,null
+        </if>
+        <if test='datameaningId!=null'>
+            ,#{datameaningId}
+        </if>
+        <if test='datameaningId==null'>
+            ,null
+        </if>
+        <if test='name!=null'>
+            ,#{name}
+        </if>
+        <if test='name==null'>
+            ,null
+        </if>
+        <if test='value!=null'>
+            ,#{value}
+        </if>
+        <if test='value==null'>
+            ,null
+        </if>
+        <if test='time!=null'>
+            ,#{time}
+        </if>
+        <if test='time==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateInfoRecord" parameterType="com.nanjing.lightingdection.entity.InfoRecord">
+        update InfoRecord set
+        <if test='chanpinId!=null'>
+            chanpinId = #{chanpinId}
+        </if>
+        <if test='datameaningId!=null'>
+            ,datameaningId = #{datameaningId}
+        </if>
+        <if test='name!=null'>
+            ,name = #{name}
+        </if>
+        <if test='value!=null'>
+            ,value = #{value}
+        </if>
+        <if test='time!=null'>
+            ,time = #{time}
+        </if>
+        where
+        <if test='id!=null'>
+            id = #{id}
+        </if>
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteInfoRecordById" parameterType="Integer">
+        delete from InfoRecord where id=#{id}
+    </delete>
+</mapper>

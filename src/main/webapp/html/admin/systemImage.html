@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录界面信息管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/date.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/systemImage.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var title = '登录界面信息管理';
+        var idField = 'id';
+        var height = 300;
+        var width = 300;
+        var columns = [[{
+            field: 'companyname',
+            title: '公司名',
+            width: 100
+        }, {
+            field: 'jiekou',
+            title: '接口',
+            width: 50
+        }, {
+            field: 'xieyi',
+            title: '协议',
+            width: 50
+        }, {
+            field: 'name',
+            title: '标题',
+            width: 100
+        }, {
+            field: 'address',
+            title: '地址',
+            width: 100
+        }, {
+            field: 'internet',
+            title: '网址',
+            width: 100
+        }, {
+            field: 'phone',
+            title: '电话',
+            width: 100
+        }, {
+            field: 'url',
+            title: '图片路径',
+            width: 200
+        }]];
+    </script>
+</head>
+<body class="easyui-layout">
+
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table id="grid"></table>
+</div>
+<!-- 添加、修改 -->
+<div class="easyui-window" id="editDlg">
+
+    <form enctype="multipart/form-data" id="editForm" method="post">
+        <table>
+            <tr>
+                <td align="right">当前图片路径</td>
+                <td align="left"><input id="update_url" name="update_url" readonly="true"></td>
+            </tr>
+            <tr>
+                <td align="right">导入文件</td>
+                <td align="left"><input id="import_file" name="import_file" type="file"></td>
+            </tr>
+            <tr>
+                <td align="right">公司名</td>
+                <td align="left" style="width:70&"><input id="update_companyname" name="update_companyname"></td>
+            </tr>
+            <tr>
+                <td align="right">接口</td>
+                <td align="left"><input id="update_jiekou" name="update_jiekou"></td>
+            </tr>
+            <tr>
+                <td align="right">协议</td>
+                <td align="left"><input id="update_xieyi" name="update_xieyi"></td>
+            </tr>
+            <tr>
+                <td align="right">标题</td>
+                <td align="left"><input id="update_name" name="update_name"></td>
+            </tr>
+            <tr>
+                <td align="right">地址</td>
+                <td align="left"><input id="update_address" name="update_address"></td>
+            </tr>
+            <tr>
+                <td align="right">地址</td>
+                <td align="left"><input id="import_address" name="import_address"></td>
+            </tr>
+            <tr>
+                <td align="right">网址</td>
+                <td align="left"><input id="update_internet" name="update_internet"></td>
+            </tr>
+            <tr>
+                <td align="right">电话</td>
+                <td align="left"><input id="update_phone" name="update_phone"></td>
+            </tr>
+        </table>
+        <button id="btnSave" type="button">保存</button>
+    </form>
+
+</div>
+<!-- 导入窗口 -->
+<div class="easyui-window" id="importDlg">
+    <form enctype="multipart/form-data" id="importForm" method="post">
+        <table>
+            <tr>
+                <td>导入文件</td>
+                <td><input id="import_file" name="import_file" type="file"></td>
+            </tr>
+            <tr>
+                <td>公司名</td>
+                <td><input id="import_companyname" name="import_companyname"></td>
+            </tr>
+            <tr>
+                <td>接口</td>
+                <td><input id="import_jiekou" name="import_jiekou"></td>
+            </tr>
+            <tr>
+                <td>协议</td>
+                <td><input id="import_xieyi" name="import_xieyi"></td>
+            </tr>
+            <tr>
+                <td>标题</td>
+                <td><input id="import_name" name="import_name"></td>
+            </tr>
+            <tr>
+                <td>地址</td>
+                <td><input id="import_address" name="import_address"></td>
+            </tr>
+            <tr>
+                <td>地址</td>
+                <td><input id="import_address" name="import_address"></td>
+            </tr>
+            <tr>
+                <td>网址</td>
+                <td><input id="import_internet" name="import_internet"></td>
+            </tr>
+            <tr>
+                <td>电话</td>
+                <td><input id="import_phone" name="import_phone"></td>
+            </tr>
+        </table>
+        <button id="btnSave2" type="button">保存</button>
+    </form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>员工管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/appcrud.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/search.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //用于search.js自动补全
+        var _value = 'type';
+        //用于crud.js的esayui初始参数
+        var title = '软件相关文档管理';
+        var idField = 'id';
+        var height = 300;
+        var width = 300;
+
+    </script>
+</head>
+<body class="easyui-layout">
+
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table class="easyui-datagrid" id="grid">
+        <thead>
+        <tr>
+            <th data-options="field:'id' , width:100 ">编号</th>
+            <th data-options="field:'type', width:100">名称</th>
+            <th data-options="field:'url', width:100">路径</th>
+        </tr>
+        </thead>
+        <tbody id="appList">
+
+        </tbody>
+    </table>
+</div>
+<!-- 添加、修改 -->
+<div class="easyui-window" data-options="closed:true" id="editDlg">
+    <form id="editForm">
+        <input id="input_id" name="id" type="hidden">
+        <table>
+            <tr>
+                <td>名称</td>
+                <td><input class="easyui-validatebox" data-options="
+					required:true,missingMessage:'名称不能为空!'
+					" id="input_type"
+                           name="type">
+                </td>
+            </tr>
+            <tr>
+                <td>路径</td>
+                <td><input name="url" readonly type="text"></td>
+            </tr>
+        </table>
+        <button id="btnSave" type="button">保存</button>
+    </form>
+</div>
+<!-- 导入窗口 -->
+<div class="easyui-window" id="importDlg">
+    <form enctype="multipart/form-data" id="importForm" method="post">
+        <table>
+            <tr>
+                <td>导入文件</td>
+                <td>
+                    <button id="import_file" name="file" onclick="tiaoshi.chooseFile()" type="button">选择文件</button>
+                </td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td><input id="import_type" name="type" type="text"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

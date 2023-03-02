@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.ChanpinDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="getAllChanpins" resultType="com.nanjing.lightingdection.entity.Chanpin">
+		select * from chanpin where isparent=0;
+	</select>
+    <select id="findChanpinBySlaveId" resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where slaveId=#{slaveId}
+    </select>
+    <select id="findBaojingchanpin" resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where pid=#{id} and isBaojing=1
+    </select>
+    <select id="findLocation" resultType="com.nanjing.lightingdection.entity.Chanpin">
+		select * from chanpin where pid=0
+	</select>
+    <select id="selectCount" resultType="Integer">
+		select count(*) from chanpin 
+	</select>
+    <select id="getAllSons" resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where pid=#{id}
+    </select>
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.Chanpin">
+		select * from chanpin
+	</select>
+
+    <!-- 初始化菜单树 -->
+    <resultMap type="com.nanjing.lightingdection.utils.ChanpinTree" id="chanpinTree">
+        <id column="id" property="id" javaType="java.lang.String"/>
+        <result column="name" property="text" javaType="java.lang.String"/>
+        <collection column="id" property="children" select="selectChild"/>
+    </resultMap>
+
+    <!-- 查找一级菜单 -->
+    <!-- 先查询菜单根级目录 -->
+    <!-- 这里的返回结果必须为resultMap，并且值为上面构建的resultMap的id的值 -->
+    <select id="selectChanpinList" resultMap="chanpinTree">
+		select * from chanpin where id = 0
+	</select>
+
+    <select id="selectChild" resultMap="chanpinTree">
+        select * from chanpin where pid
+        = #{id}
+    </select>
+
+    <!-- 根据id查询菜单 -->
+    <select id="selectChanpinById" parameterType="Integer"
+            resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where id = #{id}
+    </select>
+
+    <!-- 根据id查询菜单 -->
+    <select id="selectChanpinListById" parameterType="Integer"
+            resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where id = #{id}
+    </select>
+
+    <select id="selectChanpinByName"
+            resultType="com.nanjing.lightingdection.entity.Chanpin">
+        select * from chanpin where name like ('%${name}%')
+    </select>
+
+    <!-- 查询所有菜单的id、name -->
+    <select id="selectChanpinIdName" resultType="com.nanjing.lightingdection.entity.Chanpin">
+        SELECT * FROM chanpin where pid = #{pid}
+    </select>
+
+    <!-- 插入数据 -->
+    <!-- 插入数据 -->
+    <insert id="insertChanpin" parameterType="com.nanjing.lightingdection.entity.Chanpin" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into chanpin values(
+        <if test='id != null'>
+            #{id}
+        </if>
+        <if test='id == null'>
+            null
+        </if>
+        <if test='name != null and name != ""'>
+            ,#{name}
+        </if>
+        <if test='name == null or name == ""'>
+            ,null
+        </if>
+        <if test='location != null and location != ""'>
+            ,#{location}
+        </if>
+        <if test='location == null or location == ""'>
+            ,null
+        </if>
+        <if test='zhuangtai != null or zhuangtai ==0 '>
+            ,#{zhuangtai}
+        </if>
+        <if test='zhuangtai == null'>
+            ,null
+        </if>
+        <if test='model != null and model != ""'>
+            ,#{model}
+        </if>
+        <if test='model == null or model == ""'>
+            ,null
+        </if>
+        <if test='installation != null and installation != ""'>
+            ,#{installation}
+        </if>
+        <if test='installation == null or installation == ""'>
+            ,null
+        </if>
+        <if test='way != null'>
+            ,#{way}
+        </if>
+        <if test='way == null'>
+            ,null
+        </if>
+        <if test='address != null and address != ""'>
+            ,#{address}
+        </if>
+        <if test='address == null or address == ""'>
+            ,null
+        </if>
+        <if test='port != null '>
+            ,#{port}
+        </if>
+        <if test='port == null'>
+            ,null
+        </if>
+        <if test='portName != null and portName != ""'>
+            ,#{portName}
+        </if>
+        <if test='portName == null or portName == ""'>
+            ,null
+        </if>
+        <if test='boto != null'>
+            ,#{boto}
+        </if>
+        <if test='boto == null'>
+            ,null
+        </if>
+        <if test='boxId != null and boxId != ""'>
+            ,#{boxId}
+        </if>
+        <if test='boxId == null or boxId == ""'>
+            ,null
+        </if>
+        <if test='comment != null and comment != ""'>
+            ,#{comment}
+        </if>
+        <if test='comment == null or comment == ""'>
+            ,null
+        </if>
+        <if test='slaveId != null or slaveId==0'>
+            ,#{slaveId}
+        </if>
+        <if test='slaveId == null'>
+            ,null
+        </if>
+        <if test='connectTime != null or connectTime==0'>
+            ,#{connectTime}
+        </if>
+        <if test='connectTime == null'>
+            ,null
+        </if>
+        <if test='readTime != null or readTime==0'>
+            ,#{readTime}
+        </if>
+        <if test='readTime == null'>
+            ,null
+        </if>
+        <if test='datameaningId != null or datameaningId==0'>
+            ,#{datameaningId}
+        </if>
+        <if test='datameaningId == null'>
+            ,null
+        </if>
+        <if test='pid != null or pid==0 '>
+            ,#{pid}
+        </if>
+        <if test='pid == null '>
+            ,null
+        </if>
+        <if test='isparent != null'>
+            ,#{isparent}
+        </if>
+        <if test='isparent == null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <update id="deleteChanpinById" parameterType="Integer">
+        delete from chanpin where id = #{id}
+    </update>
+    <!-- 根据id修改数据 -->
+    <update id="updateChanpinById" parameterType="com.nanjing.lightingdection.entity.Chanpin">
+        update chanpin
+        <trim prefix="set" suffixOverrides="," suffix="where id = #{id}">
+            <if test='name != null and name != ""'>
+                name = #{name},
+            </if>
+            <if test='location != null and location != ""'>
+                location = #{location},
+            </if>
+            <if test='zhuangtai != null '>
+                zhuangtai = #{zhuangtai},
+            </if>
+            <if test='model != null '>
+                model = #{model},
+            </if>
+            <if test='installation != null '>
+                installation = #{installation},
+            </if>
+            <if test='way != null'>
+                way = #{way},
+            </if>
+            <if test='address != null and address != ""'>
+                address = #{address},
+            </if>
+            <if test='port != null'>
+                port = #{port},
+            </if>
+            <if test='portName != null and portName != ""'>
+                portName = #{portName},
+            </if>
+            <if test='boto != null'>
+                boto = #{boto},
+            </if>
+            <if test='boxId != null and boxId != ""'>
+                boxId = #{boxId},
+            </if>
+            <if test='comment != null and comment != ""'>
+                comment = #{comment},
+            </if>
+            <if test='slaveId != null'>
+                slaveId = #{slaveId},
+            </if>
+            <if test='datameaningId != null'>
+                datameaningId = #{datameaningId},
+            </if>
+            <if test='connectTime != null'>
+                connectTime = #{connectTime},
+            </if>
+            <if test='readTime != null'>
+                readTime = #{readTime},
+            </if>
+            <if test='pid != null and pid != ""'>
+                pid = #{pid},
+            </if>
+            <if test='isparent != null'>
+                isparent = #{isparent}
+            </if>
+        </trim>
+    </update>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.ChanpinPhotoDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="findAll" resultType="com.nanjing.lightingdection.entity.ChanpinPhoto">
+		select * from chanpinphoto 
+	</select>
+    <select id="findByChanpinPhotoId" resultType="com.nanjing.lightingdection.entity.ChanpinPhoto">
+        select * from chanpinphoto where id=#{id}
+    </select>
+
+    <select id="findByChanpinId" resultType="com.nanjing.lightingdection.entity.ChanpinPhoto">
+        select * from chanpinphoto where chanpinId=#{chanpinId}
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insertChanpinPhoto" parameterType="com.nanjing.lightingdection.entity.ChanpinPhoto">
+        insert into chanpinphoto values(
+        <if test='id != null'>
+            #{id}
+        </if>
+        <if test='id == null'>
+            null
+        </if>
+        <if test='location != null and location != ""'>
+            ,#{location}
+        </if>
+        <if test='location == null or location == ""'>
+            ,null
+        </if>
+        <if test='leibie != null and leibie != ""'>
+            ,#{leibie}
+        </if>
+        <if test='leibie == null or leibie == ""'>
+            ,null
+        </if>
+        <if test='chanpinId != null'>
+            ,#{chanpinId}
+        </if>
+        <if test='chanpinId == null'>
+            ,null
+        </if>
+        <if test='name != null and name != ""'>
+            ,#{name}
+        </if>
+        <if test='name == null or name == ""'>
+            ,null
+        </if>
+        <if test='url != null and url != ""'>
+            ,#{url}
+        </if>
+        <if test='url == null or url == ""'>
+            ,null
+        </if>
+        );
+    </insert>
+
+    <delete id="deleteChanpinPhoto" parameterType="Integer">
+        delete from chanpinphoto where id = #{id}
+    </delete>
+
+    <update id="updateChanpinPhoto" parameterType="com.nanjing.lightingdection.entity.ChanpinPhoto">
+        update chanpinphoto set
+        <if test='id!=null'>
+            id = #{id}
+        </if>
+        <if test='location!=null and location!=""'>
+            ,location = #{location}
+        </if>
+        <if test='leibie!=null and leibie!=""'>
+            ,leibie = #{leibie}
+        </if>
+        <if test='chanpinId!=null'>
+            ,chanpinId = #{chanpinId}
+        </if>
+        <if test='name!=null and name!=""'>
+            ,name = #{name}
+        </if>
+        <if test='url!=null and url!=""'>
+            ,url = #{url}
+        </if>
+        where
+        <if test='id!=null'>
+            id = #{id}
+        </if>
+    </update>
+</mapper>

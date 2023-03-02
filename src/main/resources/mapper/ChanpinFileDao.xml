@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.ChanpinFileDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.ChanpinFile">
+		select * from chanpinFile
+	</select>
+
+    <select id="queryById" parameterType="Integer" resultType="com.nanjing.lightingdection.entity.ChanpinFile">
+        select * from chanpinFile where id=#{id}
+    </select>
+
+
+    <select id="queryAllByPage" resultType="com.nanjing.lightingdection.entity.ChanpinFile">
+        select * from chanpinFile
+        <if test="chanpinName!=null">
+            where
+            type like '%${chanpinName}%'
+        </if>
+        <if test="limit !=null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+
+    <insert id="insertCF" parameterType="com.nanjing.lightingdection.entity.ChanpinFile">
+        insert into chanpinFile
+        values
+        (null
+        <if test='chanpinId!=null'>
+            ,#{chanpinId}
+        </if>
+        <if test='chanpinId==null'>
+            ,null
+        </if>
+        <if test='chanpinName!=null'>
+            ,#{chanpinName}
+        </if>
+        <if test='chanpinName==null'>
+            ,null
+        </if>
+        <if test='url!=null'>
+            ,#{url}
+        </if>
+        <if test='url==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateCF" parameterType="com.nanjing.lightingdection.entity.ChanpinFile">
+        update chanpinFile set
+        <if test='chanpinId!=null'>
+            chanpinId = #{chanpinId}
+        </if>
+        <if test='chanpinName!=null'>
+            ,chanpinName = #{chanpinName}
+        </if>
+        <if test='url!=null'>
+            ,url = #{url}
+        </if>
+        where id = #{id}
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteCFById" parameterType="com.nanjing.lightingdection.entity.ChanpinFile">
+        delete from chanpinFile where id=#{id}
+    </delete>
+</mapper>

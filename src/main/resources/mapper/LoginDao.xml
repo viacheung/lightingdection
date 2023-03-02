@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.LoginDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="getAll" resultType="com.nanjing.lightingdection.entity.Login">
+		select * from login
+		</select>
+    <select id="queryByCompany" parameterType="java.lang.String" resultType="com.nanjing.lightingdection.entity.Login">
+        select * from login
+        where
+        companyname=#{company}
+    </select>
+
+    <select id="queryById" parameterType="Integer" resultType="com.nanjing.lightingdection.entity.Login">
+        select * from login
+        where
+        id=#{id}
+    </select>
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.Login">
+		select * from login
+	</select>
+
+
+    <insert id="insertLogin" parameterType="com.nanjing.lightingdection.entity.Login">
+        insert into login
+        values
+        (1
+        <if test='companyname!=null'>
+            ,#{companyname}
+        </if>
+        <if test='companyname==null'>
+            ,null
+        </if>
+        <if test='jiekou!=null'>
+            ,#{jiekou}
+        </if>
+        <if test='jiekou==null'>
+            ,null
+        </if>
+        <if test='xieyi!=null'>
+            ,#{xieyi}
+        </if>
+        <if test='xieyi==null'>
+            ,null
+        </if>
+        <if test='name!=null'>
+            ,#{name}
+        </if>
+        <if test='name==null'>
+            ,null
+        </if>
+        <if test='address!=null'>
+            ,#{address}
+        </if>
+        <if test='address==null'>
+            ,null
+        </if>
+        <if test='internet!=null'>
+            ,#{internet}
+        </if>
+        <if test='internet==null'>
+            ,null
+        </if>
+        <if test='phone!=null'>
+            ,#{phone}
+        </if>
+        <if test='phone==null'>
+            ,null
+        </if>
+        <if test='url!=null'>
+            ,#{url}
+        </if>
+        <if test='url==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateLogin" parameterType="com.nanjing.lightingdection.entity.Login">
+        update login set
+        <if test='companyname!=null'>
+            companyname = #{companyname}
+        </if>
+        <if test='jiekou!=null'>
+            ,jiekou = #{jiekou}
+        </if>
+        <if test='xieyi!=null'>
+            ,xieyi = #{xieyi}
+        </if>
+        <if test='name!=null'>
+            ,name = #{name}
+        </if>
+        <if test='address!=null'>
+            ,address = #{address}
+        </if>
+        <if test='internet!=null'>
+            ,internet = #{internet}
+        </if>
+        <if test='phone!=null'>
+            ,phone = #{phone}
+        </if>
+        <if test='url!=null'>
+            ,url = #{url}
+        </if>
+        where id = 1
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteLoginById" parameterType="Integer">
+        delete from login where id=#{id}
+    </delete>
+
+    <insert id="testInsert">
+	   insert into test values(null,1);
+	</insert>
+
+</mapper>

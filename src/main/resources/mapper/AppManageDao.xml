@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.AppManageDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.AppManage">
+		select * from appManage
+	</select>
+
+    <select id="queryById" parameterType="Integer" resultType="com.nanjing.lightingdection.entity.AppManage">
+        select * from appManage where id=#{id}
+    </select>
+
+
+    <select id="queryAllByPage" resultType="com.nanjing.lightingdection.entity.AppManage">
+        select * from appManage
+        <if test="type!=null">
+            where
+            type like '%${type}%'
+        </if>
+        <if test="limit !=null">
+            limit #{start}, #{limit}
+        </if>
+    </select>
+
+    <insert id="insertApp" parameterType="com.nanjing.lightingdection.entity.AppManage">
+        insert into appManage
+        values
+        (null
+        <if test='type!=null'>
+            ,#{type}
+        </if>
+        <if test='type==null'>
+            ,null
+        </if>
+        <if test='url!=null'>
+            ,#{url}
+        </if>
+        <if test='url==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateApp" parameterType="com.nanjing.lightingdection.entity.AppManage">
+        update appManage set
+        <if test='type!=null'>
+            type = #{type}
+        </if>
+        <if test='url!=null'>
+            ,url = #{url}
+        </if>
+        where id = #{id}
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteAppById" parameterType="com.nanjing.lightingdection.entity.AppManage">
+        delete from appManage where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.BaojingPanduanDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="selectByChanpinAndDatameaning" resultType="com.nanjing.lightingdection.entity.BaojingPanduan">
+        select * from BaojingPanduan where chanpinId=#{chanpinId} and datameaningId=#{datameaningId}
+    </select>
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.BaojingPanduan">
+		select * from BaojingPanduan		
+	</select>
+
+    <!-- 添加用户 -->
+    <insert id="insertBaojingPanduan" parameterType="com.nanjing.lightingdection.entity.BaojingPanduan">
+        insert into BaojingPanduan
+        values
+        (null
+        <if test='chanpinId!=null'>
+            ,#{chanpinId}
+        </if>
+        <if test='chanpinId==null'>
+            ,null
+        </if>
+        <if test='datameaningId!=null'>
+            ,#{datameaningId}
+        </if>
+        <if test='datameaningId==null'>
+            ,null
+        </if>
+        <if test='normalData!=null'>
+            ,#{normalData}
+        </if>
+        <if test='normalData==null'>
+            ,null
+        </if>
+        <if test='yujingData!=null'>
+            ,#{yujingData}
+        </if>
+        <if test='yujingData==null'>
+            ,null
+        </if>
+        <if test='baojingData!=null'>
+            ,#{baojingData}
+        </if>
+        <if test='baojingData==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateBaojingPanduan" parameterType="com.nanjing.lightingdection.entity.BaojingPanduan">
+        update BaojingPanduan set
+        <if test='chanpinId!=null'>
+            chanpinId = #{chanpinId}
+        </if>
+        <if test='datameaningId!=null'>
+            ,datameaningId = #{datameaningId}
+        </if>
+        <if test='normalData!=null'>
+            ,normalData = #{normalData}
+        </if>
+        <if test='yujingData!=null'>
+            ,yujingData = #{yujingData}
+        </if>
+        <if test='baojingData!=null'>
+            ,baojingData = #{baojingData}
+        </if>
+        where
+        <if test='id!=null'>
+            id = #{id}
+        </if>
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteBaojingPanduanById" parameterType="Integer">
+        delete from BaojingPanduan where id=#{id}
+    </delete>
+</mapper>

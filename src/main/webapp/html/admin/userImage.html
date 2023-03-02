@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          name="viewport"/>
+    <title>位置点位管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="../static/Ui/js/userImage.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //用于search.js自动补全
+        //var _value = 'companyname';
+        //用于crud.js的esayui初始参数
+        var title = '位置点位管理';
+        var idField = 'id';
+        var height = 300;
+        var width = 300;
+        var columns = [[{
+            field: 'name',
+            title: '图片名',
+            width: 100
+        }, {
+            field: 'url',
+            title: '图片路径',
+            width: 100
+        }, {
+            field: 'dots',
+            title: '点位信息',
+            width: 200
+        }, {
+            field: 'dotsize',
+            title: '点位大小',
+            width: 100
+        },]];
+    </script>
+    <style>
+        .img {
+            position: relative;
+            border: solid 1px #000;
+            display: inline-block
+        }
+
+        .img.marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #f00;
+            border-radius: 50%
+        }
+    </style>
+
+    <script type="text/javascript">
+        var rDrag = {
+
+            o: null,
+
+            init: function (o) {
+                o.onmousedown = this.start;
+            },
+            start: function (e) {
+                var o;
+                e = rDrag.fixEvent(e);
+                e.preventDefault && e.preventDefault();
+                rDrag.o = o = this;
+                o.x = e.clientX - rDrag.o.offsetLeft;
+                o.y = e.clientY - rDrag.o.offsetTop;
+                document.onmousemove = rDrag.move;
+                document.onmouseup = rDrag.end;
+            },
+            move: function (e) {
+                e = rDrag.fixEvent(e);
+                var oLeft, oTop;
+                oLeft = e.clientX - rDrag.o.x;
+                oTop = e.clientY - rDrag.o.y;
+                rDrag.o.style.marginLeft = oLeft + 'px';
+                rDrag.o.style.marginTop = oTop + 'px';
+            },
+            end: function (e) {
+                e = rDrag.fixEvent(e);
+                rDrag.o = document.onmousemove = document.onmouseup = null;
+            },
+            fixEvent: function (e) {
+                if (!e) {
+                    e = window.event;
+                    e.target = e.srcElement;
+                    e.layerX = e.offsetX;
+                    e.layerY = e.offsetY;
+                }
+                return e;
+            }
+        }
+
+    </script>
+</head>
+<body class="easyui-layout">
+
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table id="grid"></table>
+</div>
+<!-- 添加、修改 -->
+<div class="easyui-window" data-options="closed:true" id="editDlg" style="position:absolute;">
+
+
+    <form id="editForm">
+        <input id="input_id" name="id" type="hidden">
+        <table>
+            <tr>
+                <td>图片名</td>
+                <td><input class="easyui-validatebox" data-options="
+					required:true,missingMessage:'文档名不能为空!'
+					" id="input_name"
+                           name="name">
+                </td>
+            </tr>
+            <tr>
+                <td>图片路径</td>
+                <td><input id="input_url" name="url" readonly type="text"></td>
+            </tr>
+            <tr>
+                <td>绘制点位信息（请按顺序点击）</td>
+                <td>
+                    <div class="img" id="dv" style="width:500px;height:310px">
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><input id="input_size" name="dotsize" type="hidden"></td>
+            </tr>
+
+        </table>
+        注：当前点位的样式和颜色无实际意义，仅用来标记位置<br>
+        <button id="btnSave" type="button">保存</button>
+        <button id="btnChongZai" type="button">重载图片</button>
+        <button id="btnChange" type="button">改变点位大小</button>
+        <button id="btnAdd" type="button">添加点位</button>
+    </form>
+</div>
+<!-- 导入窗口 -->
+<div class="easyui-window" id="importDlg">
+    <form enctype="multipart/form-data" id="importForm" method="post">
+        <table>
+            <tr>
+                <td>导入文件</td>
+                <td><input id="import_file" name="import_file" type="file"></td>
+
+            </tr>
+            <tr>
+                <td>绘制点位信息（请按顺序点击）</td>
+                <td>
+                    <div class="img" id="dv2" style="width:500px;height:310px">
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><input id="import_size" name="dotsize" type="hidden"></td>
+            </tr>
+        </table>
+        注：当前点位的样式和颜色无实际意义，仅用来标记位置<br>
+    </form>
+</div>
+
+<div class="easyui-window" id="changeDlg">
+    <form id="changeForm">
+        <table>
+            <tr>
+                <td>当前点位实际大小</td>
+                <td><input id="change_size" name="size" type="text"></td>
+            </tr>
+        </table>
+        <button id="Change" type="button">确定改变</button>
+    </form>
+</div>
+
+
+<div class="easyui-window" id="changeDlg2">
+    <form id="changeForm">
+        <table>
+            <tr>
+                <td>当前点位实际大小</td>
+                <td><input id="change_size2" name="size" type="text"></td>
+            </tr>
+        </table>
+        <button id="Change2" type="button">确定改变</button>
+    </form>
+</div>
+
+<!-- 导入窗口 -->
+<div class="easyui-window" id="ChangDotImgDlg">
+    <form enctype="multipart/form-data" id="CDI">
+        <table>
+            <tr>
+                <td>当前正常点位样式：</td>
+                <td>
+                    <div>
+                        <img height="50%" id="ZCDotImg" width="50%">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>改变正常点位样式</td>
+                <td><input id="ZCfile" name="ZCfile" type="file"></td>
+            </tr>
+
+            <tr>
+                <td>当前异常点位样式：</td>
+                <td>
+                    <div>
+                        <img height="50%" id="YCDotImg" width="50%">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>改变异常点位样式</td>
+                <td><input id="YCfile" name="YCfile" type="file"></td>
+            </tr>
+
+            <tr>
+                <td>当前预警点位样式：</td>
+                <td>
+                    <div>
+                        <img height="50%" id="YJDotImg" width="50%">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>改变预警点位样式</td>
+                <td><input id="YJfile" name="YJfile" type="file"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var ProportionHeightInImg; //鼠标所选位置相对于所选图片高度的比例
+    var ProportionWidthInImg;//鼠标所选位置相对于所选图片宽度的比例
+    var dot = "";
+
+    //var admin=window.parent.admin;
+    function createMarker(x, y, divName, size) {
+        size = size * 5;
+        var div = document.createElement('div');
+        div.className = 'marker';
+        //  var selected = $('#grid').datagrid('getSelected');
+        div.style.marginLeft = x - (size / 2) + 'px';
+        div.style.marginTop = y - (size / 2) + 'px';
+        div.style.position = 'absolute';
+        div.innerHTML = "<img id='dotImg' src='" + "showPhotoByPath?path=" + "dotImage/正常.png"
+            + "'  height='100%' width='100%' style='border-radius:30px'>";
+        // $.messager.alert("消息提醒",div.style.top, "warning");
+        // $.messager.alert("消息提醒", document.getElementById(divName), "warning");
+        document.getElementById(divName).appendChild(div);
+        div.style.width = size + 'px';
+        div.style.height = size + 'px';
+        rDrag.init(div);
+    }
+
+    function draw1() {
+        var size = document.getElementById("input_size").value;
+        if (size < 0.0001) {
+            size = 500 * 310 * size;
+        }
+        createMarker(0, 0, 'dv', size);
+
+
+    }
+
+    function draw2() {
+        var size = document.getElementById("import_size").value;
+        var x = document.getElementById('dv').style.left;
+        var y = document.getElementById('dv').style.top;
+        //$.messager.alert("消息提醒",x, "warning");
+        createMarker(x, y, 'dv2', size);
+
+
+    }
+</script>
+</body>
+</html>

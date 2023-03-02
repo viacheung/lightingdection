@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>数据读取管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/date.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/readData.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //用于search.js自动补全
+        var _value = 'datameaningId';
+        //用于crud.js的esayui初始参数
+        var title = '数据读取管理';
+        var idField = 'id';
+        var height = 400;
+        var width = 650;
+        var columns = [[{
+            field: 'datameaningId',
+            title: '寄存器解析编号',
+            width: 100
+        }, {
+            field: 'startRejister',
+            title: '起始寄存器编号',
+            width: 100
+        }, {
+            field: 'rejisterNum',
+            title: '读取数量',
+            width: 100
+        },]];
+    </script>
+</head>
+<body class="easyui-layout">
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table class="easyui-datagrid" id="grid">
+
+    </table>
+</div>
+<!-- 添加、修改 -->
+<div class="easyui-window" data-options="closed:true" id="editDlg">
+    <form id="editForm">
+        <input id="input_id" name="id" type="hidden">
+        <table>
+            <tr>
+                <td>寄存器解析编号</td>
+                <td>
+                    <input class="iInput" id="input_datameaningId" name="datameaningId">
+                </td>
+            </tr>
+            <tr>
+                <td>起始寄存器编号</td>
+                <td><input id="input_startRejister" name="startRejister" type="text"></td>
+            </tr>
+            <tr>
+                <td>读取数量</td>
+                <td><input id="input_rejisterNum" name="rejisterNum" type="text"></td>
+            </tr>
+        </table>
+        <button id="btnSave" type="button">保存</button>
+    </form>
+</div>
+
+</body>
+</html>

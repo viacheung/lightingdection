@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>输入寄存器解析管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/datameaning.js" type="text/javascript"></script>
+    <script>
+        var str1 = 0;
+        var str2 = 0;
+
+        function test(can) {
+            str1 = can;
+
+            document.getElementById("insert_byteNum").style.display = 'none';
+            document.getElementById("insert_byteAddress").style.display = 'none';
+            document.getElementById("insert_bitAddress").style.display = 'none';
+            document.getElementById("insert_bit").style.display = 'none';
+            //  document.getElementById("insert_functionCode").style.display = 'none';
+            document.getElementById("insert_isHex").style.display = 'none';
+            document.getElementById("insert_scale").style.display = 'none';
+            document.getElementById("insert_unit").style.display = 'none';
+            document.getElementById("insert_isPositive").style.display = 'none';
+            document.getElementById("insert_isJiexi").style.display = 'none';
+            document.getElementById("insert_gongshi").style.display = 'none';
+            document.getElementById("insert_isPanduan").style.display = 'none';
+            document.getElementById("insert_isBaojing").style.display = 'none';
+            document.getElementById("insert_isBaojingPanduan").style.display = 'none';
+            document.getElementById("insert_isRecord").style.display = 'none';
+            document.getElementById("insert_zero").style.display = 'none';
+            document.getElementById("insert_first").style.display = 'none';
+            //document.getElementById("insert_second").style.display = 'none';
+            //document.getElementById("insert_third").style.display = 'none';
+            if (str1 == 2) {
+
+
+                document.getElementById("insert_byteNum").style.display = '';
+                document.getElementById("insert_byteAddress").style.display = '';
+
+                document.getElementById("insert_isHex").style.display = '';
+                document.getElementById("insert_scale").style.display = '';
+                document.getElementById("insert_unit").style.display = '';
+                document.getElementById("insert_bit").style.display = '';
+                document.getElementById("insert_isPositive").style.display = '';
+                document.getElementById("insert_isJiexi").style.display = '';
+                document.getElementById("insert_gongshi").style.display = '';
+                document.getElementById("insert_isPanduan").style.display = '';
+                document.getElementById("insert_isBaojing").style.display = '';
+                document.getElementById("insert_isBaojingPanduan").style.display = '';
+                document.getElementById("insert_isRecord").style.display = '';
+            } else {
+
+
+                document.getElementById("insert_byteAddress").style.display = '';
+                document.getElementById("insert_bitAddress").style.display = '';
+                // document.getElementById("insert_isHex").style.display = '';
+                document.getElementById("insert_isBaojing").style.display = '';
+                // document.getElementById("insert_isRecord").style.display = '';
+                document.getElementById("insert_zero").style.display = '';
+                document.getElementById("insert_first").style.display = '';
+
+            }
+        }
+
+
+    </script>
+</head>
+<body class="easyui-layout">
+<!-- 适应父容器大小 -->
+<div data-options="region:'west',title:'使用中',split:true" id="datameaningtree"
+     style="width: 210%;">
+    <ul class="easyui-tree" id="tt"></ul>
+</div>
+<div data-options="region:'center'">
+
+    <table class="easyui-datagrid" id="grid">
+        <thead>
+        <tr>
+            <th data-options="field:'id' , width:40" id="table_id">编号</th>
+            <th data-options="field:'name', width:100" id="table_name">产品类型(数据类型)</th>
+            <th data-options="field:'type', width:100" id="table_type">类别(1代表输入寄存器 2代表保持寄存器 3代表线圈)</th>
+            <th data-options="field:'functionId', width:40" id="table_functionId" style="display:none">功能码</th>
+            <th data-options="field:'byteAddress', width:40" id="table_byteAddress" style="display:none">字节地址(寄存器地址)
+            </th>
+            <th data-options="field:'byteNum', width:40" id="table_byteNum" style="display:none">字节数量(输入寄存器读取个数)</th>
+            <th data-options="field:'bitAddress', width:40" id="table_bitAddress" style="display:none">位地址</th>
+            <th data-options="field:'pattern', width:100" id="table_pattern" style="display:none">解析方式(1代表按位解析
+                2代表按字节解析)
+            </th>
+            <th data-options="field:'zero', width:100" id="table_zero" style="display:none">位=0解析内容</th>
+            <th data-options="field:'first', width:100" id="table_first" style="display:none">位=1解析内容</th>
+            <th data-options="field:'isInput', width:100" id="table_isInput" style="display:none">是否输入指令(1代表是 0代表否)</th>
+            <th data-options="field:'functionCode', width:40" id="table_functionCode" style="display:none">指令码</th>
+            <th data-options="field:'isHex', width:100" id="table_isHex" style="display:none">是否以十六进制输出(1代表是 0代表否)</th>
+            <th data-options="field:'scale', width:40" id="table_scale" style="display:none">数据比例</th>
+            <th data-options="field:'unit', width:40" id="table_unit" style="display:none">单位</th>
+            <th data-options="field:'isPositive', width:100" id="table_isPositive" style="display:none">是否存在正负(1代表是
+                0代表否)
+            </th>
+            <th data-options="field:'isJiexi', width:100" id="table_isJiexi" style="display:none">是否需要解析(1代表是 0代表否)</th>
+            <th data-options="field:'gongshi', width:100" id="table_gongshi" style="display:none">解析公式</th>
+            <th data-options="field:'isPanduan', width:40" id="table_isPanduan" style="display:none">是否存在判断条件(1代表是
+                0代表否)
+            </th>
+            <th data-options="field:'isBaojing', width:100" id="table_isBaojing" style="display:none">是否存解方程(1代表是
+                0代表否)
+            </th>
+            <th data-options="field:'isBaojingPanduan', width:100" id="table_isBaojing" style="display:none">
+                是否存在报警判断条件(1代表是 0代表否)
+            </th>
+            <th data-options="field:'isShown', width:100" id="table_isBaojing" style="display:none">是否显示在用户界面(1代表是
+                0代表否)
+            </th>
+            <th data-options="field:'isRecord', width:100" id="table_isRecord" style="display:none">是否记录(1代表是 0代表否)</th>
+            <th data-options="field:'isPaint', width:100" id="table_isPaint" style="display:none">是否绘制(1代表是 0代表否)</th>
+            <th data-options="field:'bit', width:40" id="table_bit" style="display:none">数据位数</th>
+            <th data-options="field:'pid', width:40">父结点编号</th>
+            <th data-options="field:'isparent', width:40 ,formatter : function(value, rowData, index) {
+				    if (rowData.isparent == 1) {
+					return '是';
+				    } else {
+					return '否';
+				    }
+			        }">是否为父结点
+            </th>
+        </tr>
+        </thead>
+        <tbody id="datameaningList">
+
+        </tbody>
+    </table>
+    <div class="div2" id="div2">
+        <table class="easyui-datagrid" id="grid1" style="height:700px;">
+            <thead>
+            <tr>
+                <th data-options="field:'id' , width:100" id="table_id">编号</th>
+                <th data-options="field:'name', width:100" id="table_name">产品类型(数据类型)</th>
+                <th data-options="field:'type', width:100" id="table_type">类别(1代表输入寄存器 2代表保持寄存器 3代表线圈)</th>
+                <th data-options="field:'functionId', width:40" id="table_functionId" style="display:none">功能码</th>
+                <th data-options="field:'byteAddress', width:40" id="table_byteAddress" style="display:none">字节地址</th>
+                <th data-options="field:'byteNum', width:40" id="table_byteNum" style="display:none">字节数量</th>
+                <th data-options="field:'bitAddress', width:40" id="table_bitAddress" style="display:none">位地址</th>
+                <th data-options="field:'pattern', width:100" id="table_pattern" style="display:none">解析方式(1代表按位解析
+                    2代表按字节解析)
+                </th>
+                <th data-options="field:'zero', width:100" id="table_zero" style="display:none">位=0解析内容</th>
+                <th data-options="field:'first', width:100" id="table_first" style="display:none">位=1解析内容</th>
+                <th data-options="field:'isInput', width:100" id="table_isInput" style="display:none">是否输入指令(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'functionCode', width:40" id="table_functionCode" style="display:none">指令码</th>
+                <th data-options="field:'isHex', width:100" id="table_isHex" style="display:none">是否以十六进制输出(1代表是 0代表否)
+                </th>
+                <th data-options="field:'scale', width:40" id="table_scale" style="display:none">数据比例</th>
+                <th data-options="field:'unit', width:40" id="table_unit" style="display:none">单位</th>
+                <th data-options="field:'isPositive', width:100" id="table_isPositive" style="display:none">是否存在正负(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'isJiexi', width:100" id="table_isJiexi" style="display:none">是否需要解析(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'gongshi', width:100" id="table_gongshi" style="display:none">解析公式</th>
+                <th data-options="field:'isPanduan', width:40" id="table_isPanduan" style="display:none">是否存在判断条件(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'isBaojing', width:100" id="table_isBaojing" style="display:none">是否解方程(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'isBaojingPanduan', width:100" id="table_isBaojingPanduan" style="display:none">
+                    是否存在报警判断条件(1代表是 0代表否)
+                </th>
+                <th data-options="field:'isShown', width:100" id="table_isShown" style="display:none">是否显示在用户界面(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'isRecord', width:100" id="table_isRecord" style="display:none">是否记录(1代表是
+                    0代表否)
+                </th>
+                <th data-options="field:'isPaint', width:100" id="table_isPaint" style="display:none">是否绘制(1代表是 0代表否)
+                </th>
+                <th data-options="field:'bit', width:40" id="table_bit" style="display:none">数据位数</th>
+                <th data-options="field:'pid', width:40">父结点编号</th>
+                <th data-options="field:'isparent', width:40 ,formatter : function(value, rowData, index) {
+				    if (rowData.isparent == 1) {
+					return '是';
+				    } else {
+					return '否';
+				    }
+			        }">是否为父结点
+                </th>
+            </tr>
+            </thead>
+            <tbody id="datameaningList1">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- 添加表单(输入寄存器四级菜单的添加)-->
+<div id="insertDlg">
+    <form id="insertForm" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr id="insert_isShown">
+                <td align="right">是否显示在用户界面:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isShown">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_pattern">
+                <td align="right">解析方式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true" editable="false"
+                                         id="pattern" name="pattern"
+                                         onchange="test(this.value)">
+                    <option value="1">按位解析</option>
+                    <option value="2">按字节解析</option>
+                </select>
+                </td>
+            </tr>
+            <tr id="insert_byteAddress" style="display:none">
+                <td align="right">字节地址:</td>
+                <td align="left"><input name="byteAddress" type="text"/></td>
+            </tr>
+            <tr id="insert_byteNum" style="display:none">
+                <td align="right">字节数量:</td>
+                <td align="left"><input name="byteNum" type="text"/></td>
+            </tr>
+            <tr id="insert_bitAddress" style="display:none">
+                <td align="right">位地址:</td>
+                <td align="left"><input name="bitAddress" type="text"/></td>
+            </tr>
+            <tr id="insert_isHex" style="display:none">
+                <td align="right">是否以十六进制输出:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isHex">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_scale" style="display:none">
+                <td align="right">数据比例:</td>
+                <td align="left"><input name="scale" type="text"/></td>
+            </tr>
+            <tr id="insert_unit" style="display:none">
+                <td align="right">单位:</td>
+                <td align="left"><input name="unit" type="text"/></td>
+            </tr>
+            <tr id="insert_bit" style="display:none">
+                <td align="right">数据位数:</td>
+                <td align="left"><input name="bit" type="text"/></td>
+            </tr>
+            <tr id="insert_isPositive" style="display:none">
+                <td align="right">是否存在正负:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPositive">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+
+            <tr id="insert_isJiexi" style="display:none">
+                <td align="right">是否解析:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isJiexi">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_gongshi" style="display:none">
+                <td align="right">解析公式:</td>
+                <td align="left"><input name="gongshi" type="text"/></td>
+            </tr>
+            <tr id="insert_isPanduan" style="display:none">
+                <td align="right">是否存在判断条件:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPanduan">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isBaojing" style="display:none">
+                <td align="right">是否解方程:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isBaojing">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isBaojingPanduan" style="display:none">
+                <td align="right">是否存在报警判断条件:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isBaojingPanduan">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isRecord" style="display:none">
+                <td align="right">是否记录:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isRecord">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isPaint" style="display:none">
+                <td align="right">是否绘制:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPaint">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_zero" style="display:none">
+                <td align="right">位=0解析内容:</td>
+                <td align="left"><input name="zero" type="text"/></td>
+            </tr>
+            <tr id="insert_first" style="display:none">
+                <td align="right">位=1解析内容:</td>
+                <td align="left"><input name="first" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+
+<!-- 添加表单(保持寄存器四级菜单的添加)-->
+<div id="insertDlgHold">
+    <form id="insertFormHold" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">保持寄存器地址:</td>
+                <td align="left"><input id="insert_byteAddress" name="byteAddress" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">是否需要输入指令:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_isInput"
+                                         name="isInput">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td align="right">是否为十六进制格式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_isHex"
+                                         name="isHex">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td align="right">指令码:</td>
+                <td align="left"><input id="insert_functionCode" name="functionCode" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(线圈四级菜单的添加)-->
+<div id="insertDlgCoil">
+    <form id="insertFormCoil" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">线圈编号:</td>
+                <td align="left"><input id="insert_byteAddress" name="byteAddress" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">指令码:</td>
+                <td align="left"><input id="insert_functionCode" name="functionCode" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(一级菜单的添加)-->
+<div id="insertDlgInit">
+    <form id="insertFormInit" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">产品类别名字:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(二级菜单的添加)-->
+<div id="insertDlg2">
+    <form id="insertForm2" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">寄存器名字:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">寄存器类别:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_type"
+                                         name="type">
+                    <option value="1">输入寄存器</option>
+                    <option value="2">保持寄存器</option>
+                    <option value="3">线圈</option>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">功能码:</td>
+                <td align="left"><input id="insert_functionId" name="functionId" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(三级菜单的添加)-->
+<div id="insertDlg3">
+    <form id="insertForm3" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="insertDlg1">
+    <form id="insertForm1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr id="insert_isShown">
+                <td align="right">是否显示在用户界面:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isShown">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_pattern">
+                <td align="right">解析方式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true" editable="false"
+                                         id="pattern" name="pattern"
+                                         onchange="test(this.value)">
+                    <option value="1">按位解析</option>
+                    <option value="2">按字节解析</option>
+                </select>
+                </td>
+            </tr>
+            <tr id="insert_byteAddress" style="display:none">
+                <td align="right">字节地址:</td>
+                <td align="left"><input name="byteAddress" type="text"/></td>
+            </tr>
+            <tr id="insert_byteNum" style="display:none">
+                <td align="right">字节数量:</td>
+                <td align="left"><input name="byteNum" type="text"/></td>
+            </tr>
+
+
+            <tr id="insert_bitAddress" style="display:none">
+                <td align="right">位地址:</td>
+                <td align="left"><input name="bitAddress" type="text"/></td>
+            </tr>
+            <tr id="insert_isHex" style="display:none">
+                <td align="right">是否以十六进制输出:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isHex">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_scale" style="display:none">
+                <td align="right">数据比例:</td>
+                <td align="left"><input name="scale" type="text"/></td>
+            </tr>
+            <tr id="insert_unit" style="display:none">
+                <td align="right">单位:</td>
+                <td align="left"><input name="unit" type="text"/></td>
+            </tr>
+            <tr id="insert_bit" style="display:none">
+                <td align="right">数据位数:</td>
+                <td align="left"><input name="bit" type="text"/></td>
+            </tr>
+            <tr id="insert_isPositive" style="display:none">
+                <td align="right">是否存在正负:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPositive">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+
+            <tr id="insert_isJiexi" style="display:none">
+                <td align="right">是否解析:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isJiexi">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_gongshi" style="display:none">
+                <td align="right">解析公式:</td>
+                <td align="left"><input name="gongshi" type="text"/></td>
+            </tr>
+            <tr id="insert_isPanduan" style="display:none">
+                <td align="right">是否存在判断条件:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPanduan">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isBaojing" style="display:none">
+                <td align="right">是否解方程:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isBaojing">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isBaojingPanduan" style="display:none">
+                <td align="right">是否存在报警判断条件:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isBaojingPanduan">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isRecord" style="display:none">
+                <td align="right">是否记录:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isRecord">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_isPaint" style="display:none">
+                <td align="right">是否绘制:</td>
+                <td align="left"><select
+
+                        data-options="panelHeight:'100',required:true" editable="false"
+                        name="isPaint">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr id="insert_zero" style="display:none">
+                <td align="right">位=0解析内容:</td>
+                <td align="left"><input name="zero" type="text"/></td>
+            </tr>
+            <tr id="insert_first" style="display:none">
+                <td align="right">位=1解析内容:</td>
+                <td align="left"><input name="first" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+
+<!-- 添加表单(保持寄存器四级菜单的添加)-->
+<div id="insertDlgHold1">
+    <form id="insertFormHold1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">保持寄存地址:</td>
+                <td align="left"><input id="insert_byteAddress" name="byteAddress" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">是否需要输入指令:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_isInput"
+                                         name="isInput">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td align="right">是否为十六进制格式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_isHex"
+                                         name="isHex">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td align="right">指令码:</td>
+                <td align="left"><input id="insert_functionCode" name="functionCode" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(线圈四级菜单的添加)-->
+<div id="insertDlgCoil1">
+    <form id="insertFormCoil1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">线圈编号:</td>
+                <td align="left"><input id="insert_byteAddress" name="byteAddress" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">指令码:</td>
+                <td align="left"><input id="insert_functionCode" name="functionCode" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(一级菜单的添加)-->
+<div id="insertDlgInit1">
+    <form id="insertFormInit1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">产品类别名字:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(二级菜单的添加)-->
+<div id="insertDlg22">
+    <form id="insertForm22" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">寄存器名字:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">寄存器类别:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_type"
+                                         name="type">
+                    <option value="1">输入寄存器</option>
+                    <option value="2">保持寄存器</option>
+                    <option value="3">线圈</option>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">功能码:</td>
+                <td align="left"><input id="insert_functionId" name="functionId" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<!-- 添加表单(三级菜单的添加)-->
+<div id="insertDlg33">
+    <form id="insertForm33" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">数据类型:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="batchDlg">
+    <form id="batchForm" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="batchDlg1">
+    <form id="batchForm1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="batchDlgTwo">
+    <form id="batchFormTwo" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="batchDlgTwo1">
+    <form id="batchFormTwo1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    var admin = window.parent.admin;
+    loadtree();
+
+    function loadtree() {
+        var html1 = "";
+        var root = null;
+        $.ajax({
+            url: "findAllDatameaning",
+            type: "post",
+            async: false,//此处需要注意的是要想获取ajax返回的值这个async属性必须设置成同步的，否则获取不到返回值
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                root = data;
+            }
+        });
+
+        if (root.length > 0) {
+            var chanpintree = root[0].children;
+            for (var i = 0; i < chanpintree.length; i++) {//1
+                html1 += "<li id='" + chanpintree[i].id + "'>"
+                    + "<span>" + chanpintree[i].text
+                    + "</span>";
+                var children = chanpintree[i].children;
+                if (children.length > 0)
+                    html1 += "<ul>";
+                for (var j = 0; j < children.length; j++) {//2
+                    html1 += "<li id='" + children[j].id
+                        + "'><span>" + children[j].text
+                        + "</span>";
+
+                    var child = children[j].children;
+                    if (child.length > 0)
+                        html1 += "<ul>";
+                    for (var s = 0; s < child.length; s++) {//3
+                        html1 += "<li id='" + child[s].id
+                            + "'><span>" + child[s].text
+                            + "</span>";
+
+                        var ch = child[s].children;
+                        if (ch.length > 0)
+                            html1 += "<ul>";
+                        for (var k = 0; k < ch.length; k++) {//4
+                            html1 += "<li id='" + ch[k].id
+                                + "'><span>" + ch[k].text
+                                + "</span>";
+
+                            html1 += "</li>";
+                        }
+                        if (ch.length > 0)
+                            html1 += "</ul>";
+
+                        html1 += "</li>";
+                    }
+                    if (child.length > 0)
+                        html1 += "</ul>";
+
+                    html1 += "</li>";
+                }
+                if (children.length > 0)
+                    html1 += "</ul>";
+                html1 += "</li>";
+            }
+            document.getElementById("tt").innerHTML = html1;
+        }
+        disposeTree();
+        loadDataGrid('-1');
+
+        for (var k = 0; k < child.length; k++) {
+            html1 += "<li id='" + child[k].id
+                + "'><span>" + child[k].text
+                + "</span>";
+
+            html1 += "</li>";
+        }
+
+    }
+</script>
+</body>
+</html>

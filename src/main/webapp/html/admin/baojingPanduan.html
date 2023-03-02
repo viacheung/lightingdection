@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>报警判断管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet"
+          type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/date.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/baojingPanduan.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //用于search.js自动补全
+
+        //用于crud.js的esayui初始参数
+        var title = '报警判断管理';
+        var idField = 'id';
+        var height = 250;
+        var width = 300;
+        var columns = [[
+            {
+                field: 'chanpinId',
+                title: '产品编号',
+                width: 100
+            }, {
+                field: 'datameaningId',
+                title: '寄存器解析编号',
+                width: 100
+            }, {
+                field: 'normalData',
+                title: '正常值',
+                width: 100
+            }, {
+                field: 'yujingData',
+                title: '预警值',
+                width: 100
+            }, {
+                field: 'baojingData',
+                title: '报警值',
+                width: 100
+            },]];
+    </script>
+</head>
+<body class="easyui-layout">
+<!-- 数据表格区 -->
+<div data-options="region:'center',collapsible:true,split:true"
+     style="width: 600px;">
+    <table class="easyui-datagrid" id="grid">
+    </table>
+</div>
+<!-- 添加、修改 -->
+<div class="easyui-window" data-options="closed:true" id="editDlg">
+    <form id="editForm">
+        <input id="input_id" name="id" type="hidden">
+        <table>
+            <tr>
+                <td>产品编号</td>
+                <td><input id="input_chanpinId" name="chanpinId" type="text"></td>
+            </tr>
+
+            <tr>
+                <td>寄存器解析编号</td>
+                <td><input id="input_datameaningId" name="datameaningId" type="text"></td>
+            </tr>
+            <tr>
+                <td>正常值</td>
+                <td><input id="input_normalData" name="normalData" type="text"></td>
+            </tr>
+            <tr>
+                <td>预警值</td>
+                <td><input id="input_yujingData" name="yujingData" type="text"></td>
+            </tr>
+            <tr>
+                <td>异常值</td>
+                <td><input id="input_baojingData" name="baojingData" type="text"></td>
+            </tr>
+
+        </table>
+        <button id="btnSave" type="button">保存</button>
+    </form>
+</div>
+</body>
+</html>

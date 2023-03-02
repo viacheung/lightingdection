@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.UserDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="queryById" parameterType="java.lang.String" resultType="com.nanjing.lightingdection.entity.User">
+        select * from user
+        where
+        user_code=#{id}
+    </select>
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.User">
+		select * from user
+	</select>
+
+    <!-- 添加用户 -->
+    <insert id="insertUser" parameterType="com.nanjing.lightingdection.entity.User">
+        insert into user
+        values
+        (null
+        <if test='user_code!=null'>
+            ,#{user_code}
+        </if>
+        <if test='user_code==null'>
+            ,null
+        </if>
+        <if test='user_name!=null'>
+            ,#{user_name}
+        </if>
+        <if test='user_name==null'>
+            ,null
+        </if>
+        <if test='user_pwd!=null'>
+            ,#{user_pwd}
+        </if>
+        <if test='user_pwd==null'>
+            ,null
+        </if>
+        <if test='user_company!=null'>
+            ,#{user_company}
+        </if>
+        <if test='user_company==null'>
+            ,null
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateUser" parameterType="com.nanjing.lightingdection.entity.User">
+        update user set
+        <if test='user_code!=null'>
+            user_code = #{user_code}
+        </if>
+        <if test='user_name!=null'>
+            ,user_name = #{user_name}
+        </if>
+        <if test='user_pwd!=null'>
+            ,user_pwd = #{user_pwd}
+        </if>
+        <if test='user_company!=null'>
+            ,user_company = #{user_company}
+        </if>
+        where
+        <if test='user_id!=null'>
+            user_id = #{user_id}
+        </if>
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from user where user_id=#{userId}
+    </delete>
+</mapper>

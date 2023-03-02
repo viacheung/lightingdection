@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.PanDuanDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="findByDataMeaningId" resultType="com.nanjing.lightingdection.entity.PanDuan">
+        select * from panduan where datameaningId=#{datameaningId} and data=#{data}
+    </select>
+
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="findAll" resultType="com.nanjing.lightingdection.entity.PanDuan">
+		select * from panduan limit 0,1000
+	</select>
+    <!-- 插入数据 -->
+    <insert id="insertPanDuanData" parameterType="com.nanjing.lightingdection.entity.PanDuan">
+        insert into panduan values(
+        <if test='data != null'>
+            #{data}
+        </if>
+        <if test='data == null'>
+            null
+        </if>
+        <if test='name != null and name != ""'>
+            ,#{name}
+        </if>
+        <if test='name == null or name == ""'>
+            ,null
+        </if>
+        <if test='datameaningId != null '>
+            ,#{datameaningId}
+        </if>
+        <if test='datameaningId == null '>
+            ,null
+        </if>
+        <if test='isError != null or isError==0'>
+            ,#{isError}
+        </if>
+        <if test='isError == null '>
+            ,null
+        </if>
+        );
+    </insert>
+
+    <delete id="deletePanDuanData">
+        delete from panduan where data = #{data} and datameaningId=#{datameaningId}
+    </delete>
+
+    <update id="updatePanDuandata" parameterType="com.nanjing.lightingdection.entity.PanDuan">
+        update panduan set
+        <if test='data!=null'>
+            data = #{data}
+        </if>
+        <if test='isError!=null or isError==0'>
+            ,isError = #{isError}
+        </if>
+        <if test='name != null and name != ""'>
+            ,name = #{name}
+        </if>
+        <if test='datameaningId != null '>
+            ,datameaningId = #{datameaningId}
+        </if>
+        where
+        <if test='datameaningId !=null'>
+            datameaningId = #{datameaningId} and
+        </if>
+        <if test='data!=null'>
+            data= #{data}
+        </if>
+    </update>
+
+</mapper>

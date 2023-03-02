@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head id="Head1">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>后台权限管理</title>
+    <link href="../static/Ui/css/default.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/Ui/adminjs/themes/gray/easyui.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/Ui/adminjs/themes/icon.css" rel="stylesheet" type="text/css"/>
+    <script src="../static/Ui/adminjs/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/adminjs/jquery.easyui.1.2.6.min.js" type="text/javascript"></script>
+    <script src='../static/Ui/adminjs/index.js' type="text/javascript"></script>
+
+
+</head>
+<body class="easyui-layout" fit="true" scroll="no" style="overflow-y: hidden">
+<noscript>
+    <div style=" position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;">
+        <img alt='抱歉，请开启脚本支持！' src="../static/Ui/images/noscript.gif"/>
+    </div>
+</noscript>
+
+<div id="loading-mask"
+     style="position:absolute;top:0px; left:0px; width:100%; height:100%; background:#D2E0F2; z-index:20000">
+    <div id="pageloading"
+         style="position:absolute; top:50%; left:50%; margin:-120px 0px 0px -120px; text-align:center;  border:2px solid #8DB2E3; width:200px; height:40px;  font-size:14px;padding:10px; font-weight:bold; background:#fff; color:#15428B;">
+        <img align="absmiddle" src="../static/Ui/images/loading.gif"/> 正在加载中,请稍候...
+    </div>
+</div>
+
+<div border="false" region="north" split="true" style="overflow: hidden; height: 30px;
+        background: url(../../../Ui/images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+    <span class="head" style="float:right; padding-right:20px;">欢迎 <span id="user_name"></span>
+    <a href="#" id="editpass">修改密码</a> 
+   <a href="logout" id="loginOut">安全退出</a></span>
+    <span style="padding-left:10px; font-size: 16px; ">
+    <img align="absmiddle" height="20" src="../static/Ui/images/blocks.gif" width="20"/> 管理系统</span>
+</div>
+<div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+    <div class="footer">后台管理</div>
+</div>
+<div id="west" region="west" split="true" style="width:180px" title="导航菜单">
+    <div class="easyui-accordion" id="nav">
+        <div data-options="iconCls:'icon-sys'" style="overflow:auto;height:100%" title="系统管理">
+            <ul class="navlist">
+                <li>
+                    <div>
+                        <a href="#" ref="101" rel="../admin/user">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">用户管理
+                		</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="101" rel="../admin/systemImage">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">系统界面管理
+                		</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div data-options="iconCls:'icon-sys'" style="overflow: auto; height: 100%"
+             title="显示信息管理">
+            <ul class="navlist">
+                <li>
+                    <div>
+                        <a href="#" ref="201" rel="../admin/chanpin"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">产品信息管理 </span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="202" rel="../admin/ChanpinPhoto"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">产品类别图片管理 </span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="203" rel="../admin/userImage"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">图片管理 </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div data-options="iconCls:'icon-sys'" style="overflow: auto; height: 100%"
+             title="数据解析管理">
+            <ul class="navlist">
+                <li>
+                    <div>
+                        <a href="#" ref="301" rel="../admin/datameaning"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">解析管理</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="302" rel="../admin/baojing">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">报警管理
+                		</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="303" rel="../admin/PanDuan">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">条件判断管理
+                		</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="304" rel="../admin/baojingPanduan"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">报警判断管理</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="305" rel="../admin/readData"> <span
+                                class="icon icon-log">&nbsp; </span>
+                            <span class="nav">数据读取管理</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="#" ref="306" rel="../admin/errorSet">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">故障设置管理
+                		</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div data-options="iconCls:'icon-sys'" style="overflow:auto;height:100%" title="产品设置信息管理">
+            <ul class="navlist">
+                <li>
+                    <div>
+                        <a href="#" ref="401" rel="../admin/chanpinSet">
+						<span class="icon icon-log">&nbsp;
+						</span>
+                            <span class="nav">产品信息设置
+                		</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="mainPanle" region="center" style="background: #eee; overflow-y:hidden">
+    <div border="false" class="easyui-tabs" fit="true" id="tabs">
+        <div style="padding:20px;overflow:hidden; color:red; " title="欢迎使用">
+            <h1 style="font-size:24px;"></h1>
+            <h1 style="font-size:24px;"></h1>
+            <h1 style="font-size:24px;"></h1>
+            <h1 style="font-size:24px;"></h1>
+        </div>
+    </div>
+</div>
+
+<!--修改密码窗口-->
+<!--修改密码窗口-->
+<div class="easyui-dialog" id="w">
+    <div class="easyui-layout" fit="true">
+        <div border="false" region="center" style="padding: 10px; background: #fff;">
+            <table cellpadding=3>
+                <tr>
+                    <td>旧密码：</td>
+                    <td><input class="txt01" id="txtOldPass" type="password"/></td>
+                </tr>
+                <tr>
+                    <td>新密码：</td>
+                    <td><input class="txt01" id="txtNewPass" type="password"/></td>
+                </tr>
+                <tr>
+                    <td>确认密码：</td>
+                    <td><input class="txt01" id="txtRePass" type="password"/></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="easyui-menu" id="mm" style="width:150px;">
+    <div id="tabupdate">刷新</div>
+    <div class="menu-sep"></div>
+    <div id="close">关闭</div>
+    <div id="closeall">全部关闭</div>
+    <div id="closeother">除此之外全部关闭</div>
+    <div class="menu-sep"></div>
+    <div id="closeright">当前页右侧全部关闭</div>
+    <div id="closeleft">当前页左侧全部关闭</div>
+    <div class="menu-sep"></div>
+    <div id="exit">退出</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.DatameaningDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+    <select id="getAllJiance" resultType="com.nanjing.lightingdection.entity.Datameaning">
+		select * from datameaning where isparent=0
+	</select>
+    <select id="getAllSons" resultType="com.nanjing.lightingdection.entity.Datameaning">
+        select * from datameaning where pid=#{id}
+    </select>
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.Datameaning">
+		select * from datameaning
+	</select>
+
+    <!-- 初始化菜单树 -->
+    <resultMap type="com.nanjing.lightingdection.utils.DatameaningTree" id="datameaningTree">
+        <id column="id" property="id" javaType="java.lang.String"/>
+        <result column="name" property="text" javaType="java.lang.String"/>
+        <collection column="id" property="children" select="selectChild"/>
+    </resultMap>
+
+    <!-- 查找一级菜单 -->
+    <!-- 先查询菜单根级目录 -->
+    <!-- 这里的返回结果必须为resultMap，并且值为上面构建的resultMap的id的值 -->
+    <select id="selectDatameaningList" resultMap="datameaningTree">
+		select * from datameaning where id=0
+	</select>
+
+    <select id="selectChild" resultMap="datameaningTree">
+        select * from datameaning where pid
+        = #{id}
+    </select>
+
+    <!-- 根据id查询菜单 -->
+    <select id="selectDatameaningById" parameterType="java.lang.Integer"
+            resultType="com.nanjing.lightingdection.entity.Datameaning">
+        select * from datameaning where id = #{id}
+    </select>
+
+    <!-- 根据id查询菜单 -->
+    <select id="selectDatameaningListById" parameterType="java.lang.Integer"
+            resultType="com.nanjing.lightingdection.entity.Datameaning">
+        select * from datameaning where id = #{id}
+    </select>
+
+    <!-- 查询所有菜单的id、name -->
+    <select id="selectDatameaningIdName" resultType="com.nanjing.lightingdection.entity.Datameaning">
+        SELECT * FROM datameaning where pid = #{pid}
+    </select>
+
+    <!-- 插入数据 -->
+    <insert id="insertDatameaning" parameterType="com.nanjing.lightingdection.entity.Datameaning">
+        insert into datameaning values(
+        <if test='id != null'>
+            #{id}
+        </if>
+        <if test='id == null'>
+            null
+        </if>
+        <if test='name != null and name != ""'>
+            ,#{name}
+        </if>
+        <if test='name == null or name == ""'>
+            ,null
+        </if>
+
+        <if test='type != null or type==0'>
+            ,#{type}
+        </if>
+        <if test='type == null '>
+            ,null
+        </if>
+        <if test='functionId != null or functionId==0 '>
+            ,#{functionId}
+        </if>
+        <if test='functionId == null '>
+            ,null
+        </if>
+        <if test='byteAddress != null or byteAddress==0'>
+            ,#{byteAddress}
+        </if>
+        <if test='byteAddress == null'>
+            ,null
+        </if>
+        <if test='byteNum != null or byteNum==0 '>
+            ,#{byteNum}
+        </if>
+        <if test='byteNum == null '>
+            ,null
+        </if>
+        <if test='bitAddress != null or bitAddress==0'>
+            ,#{bitAddress}
+        </if>
+        <if test='bitAddress == null'>
+            ,null
+        </if>
+        <if test='isInput != null or isInput==0'>
+            ,#{isInput}
+        </if>
+        <if test='isInput == null'>
+            ,null
+        </if>
+
+        <if test='functionCode != null and functionCode != ""'>
+            ,#{functionCode}
+        </if>
+        <if test='functionCode == null or functionCode == ""'>
+            ,null
+        </if>
+
+        <if test='isHex != null or isHex==0'>
+            ,#{isHex}
+        </if>
+        <if test='isHex == null'>
+            ,null
+        </if>
+        <if test='scale != null'>
+            ,#{scale}
+        </if>
+        <if test='scale == null'>
+            ,null
+        </if>
+        <if test='bit != null'>
+            ,#{bit}
+        </if>
+        <if test='bit == null'>
+            ,null
+        </if>
+        <if test='unit != null and unit != ""'>
+            ,#{unit}
+        </if>
+        <if test='unit == null or unit == ""'>
+            ,null
+        </if>
+        <if test='isPositive != null or isPositive==0'>
+            ,#{isPositive}
+        </if>
+        <if test='isPositive == null'>
+            ,null
+        </if>
+        <if test='isJiexi != null or isJiexi==0'>
+            ,#{isJiexi}
+        </if>
+        <if test='isJiexi == null'>
+            ,null
+        </if>
+        <if test='gongshi != null and gongshi != ""'>
+            ,#{gongshi}
+        </if>
+        <if test='gongshi == null or gongshi == ""'>
+            ,null
+        </if>
+        <if test='isPanduan != null or isPanduan==0 '>
+            ,#{isPanduan}
+        </if>
+        <if test='isPanduan == null'>
+            ,null
+        </if>
+        <if test='isSlove != null or isSlove==0 '>
+            ,#{isSlove}
+        </if>
+        <if test='isSlove == null'>
+            ,null
+        </if>
+        <if test='isBaojingPanduan != null or isBaojingPanduan==0 '>
+            ,#{isBaojingPanduan}
+        </if>
+        <if test='isBaojingPanduan == null'>
+            ,null
+        </if>
+        <if test='isShown != null or isShown==0 '>
+            ,#{isShown}
+        </if>
+        <if test='isShown == null'>
+            ,null
+        </if>
+        <if test='isRecord != null or isRecord==0 '>
+            ,#{isRecord}
+        </if>
+        <if test='isRecord == null'>
+            ,null
+        </if>
+
+        <if test='pattern != null or pattern==0'>
+            ,#{pattern}
+        </if>
+        <if test='pattern == null '>
+            ,null
+        </if>
+        <if test='zero != null and zero != ""'>
+            ,#{zero}
+        </if>
+        <if test='zero == null or zero == ""'>
+            ,null
+        </if>
+        <if test='first != null and first != ""'>
+            ,#{first}
+        </if>
+        <if test='first == null or first == ""'>
+            ,null
+        </if>
+        <if test='isPaint != null or isPaint==0 '>
+            ,#{isRecord}
+        </if>
+        <if test='isPaint == null'>
+            ,null
+        </if>
+        <if test='pid != null'>
+            ,#{pid}
+        </if>
+        <if test='pid == null'>
+            ,null
+        </if>
+        <if test='isparent != null or isparent==0'>
+            ,#{isparent}
+        </if>
+        <if test='isparent == null'>
+            ,null
+        </if>
+        );
+    </insert>
+    <!-- 根据id删除数据 -->
+    <update id="deleteDatameaningById" parameterType="Integer">
+        delete from datameaning where id = #{id}
+    </update>
+    <!-- 根据id修改数据 -->
+    <update id="updateDatameaningById" parameterType="com.nanjing.lightingdection.entity.Datameaning">
+        update datameaning
+        <trim prefix="set" suffixOverrides="," suffix="where id = #{id}">
+            <if test='name != null and name != ""'>
+                name = #{name},
+            </if>
+            <if test='type != null'>
+                type = #{type},
+            </if>
+            <if test='functionId != null'>
+                functionId = #{functionId},
+            </if>
+            <if test='byteNum != null'>
+                byteNum = #{byteNum},
+            </if>
+
+            <if test='byteAddress != null'>
+                byteAddress = #{byteAddress},
+            </if>
+            <if test='bitAddress != null'>
+                bitAddress = #{bitAddress},
+            </if>
+            <if test='isInput != null'>
+                isInput = #{isInput},
+            </if>
+
+            <if test='functionCode != null and functionCode != ""'>
+                functionCode = #{functionCode},
+            </if>
+
+            <if test='isHex != null'>
+                isHex = #{isHex},
+            </if>
+
+            <if test='scale != null'>
+                scale = #{scale},
+            </if>
+            <if test='bit != null'>
+                bit = #{bit},
+            </if>
+
+            <if test='unit != null and unit != ""'>
+                unit = #{unit},
+            </if>
+
+            <if test='isPositive != null'>
+                isPositive = #{isPositive},
+            </if>
+
+            <if test='isJiexi != null'>
+                isJiexi = #{isJiexi},
+            </if>
+
+            <if test='gongshi != null and gongshi != ""'>
+                gongshi = #{gongshi},
+            </if>
+
+            <if test='isPanduan != null'>
+                isPanduan = #{isPanduan},
+            </if>
+
+            <if test='isSlove != null'>
+                isSlove = #{isSlove},
+            </if>
+            <if test='isBaojingPanduan != null'>
+                isBaojingPanduan = #{isBaojingPanduan},
+            </if>
+            <if test='isShown != null'>
+                isShown = #{isShown},
+            </if>
+            <if test='isRecord != null'>
+                isRecord = #{isRecord},
+            </if>
+
+            <if test='pattern != null'>
+                pattern = #{pattern},
+            </if>
+            <if test='zero != null and zero != ""'>
+                zero = #{zero},
+            </if>
+            <if test='first != null and first != ""'>
+                first = #{first},
+            </if>
+            <if test='isPaint != null'>
+                isPaint = #{isPaint},
+            </if>
+            <if test='pid != null'>
+                pid = #{pid},
+            </if>
+
+            <if test='isparent != null'>
+                isparent = #{isparent}
+            </if>
+
+        </trim>
+    </update>
+
+    <!-- 根据产品id删除数据 -->
+    <delete id="deleteDatameaningByChanpinId" parameterType="java.lang.Integer">
+        delete from datameaning where chanpinId = #{chanpinId}
+    </delete>
+    <!-- 根据产品id修改数据 -->
+    <update id="updateDatameaningByChanpinId" parameterType="com.nanjing.lightingdection.entity.Datameaning">
+        update datameaning
+        <trim prefix="set" suffixOverrides="," suffix="where chanpinId = #{chanpinId} and pid=0 ">
+            <if test='name != null and name != ""'>
+                name = #{name},
+            </if>
+            <if test='name == null or name == ""'>
+                name = null,
+            </if>
+        </trim>
+    </update>
+
+</mapper>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>线圈解析管理</title>
+    <link href="../static/Ui/ui/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link href="../static/Ui/ui/themes/icon.css" rel="stylesheet" type="text/css">
+    <script src="../static/Ui/ui/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../static/Ui/ui/jquery.serializejson.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="../static/Ui/js/chanpin.js" type="text/javascript"></script>
+    <script src="../static/Ui/js/search.js" type="text/javascript"></script>
+    <script>
+        var str2 = 0;
+
+        function test(can) {
+            str2 = can;
+            document.getElementById("insert_address").style.display = 'none';
+            document.getElementById("insert_port").style.display = 'none';
+            document.getElementById("insert_portName").style.display = 'none';
+            document.getElementById("insert_boto").style.display = 'none';
+            document.getElementById("insert_connectTime").style.display = 'none';
+            document.getElementById("insert_readTime").style.display = 'none';
+            if (str2 == 2) {
+                document.getElementById("insert_address").style.display = '';
+                document.getElementById("insert_port").style.display = '';
+                document.getElementById("insert_connectTime").style.display = '';
+                document.getElementById("insert_readTime").style.display = '';
+
+            } else {
+                document.getElementById("insert_portName").style.display = '';
+                document.getElementById("insert_boto").style.display = '';
+            }
+        }
+
+    </script>
+</head>
+<body class="easyui-layout">
+<!-- 适应父容器大小 -->
+<div data-options="region:'west',title:'使用中',split:true" id="datameaningtree"
+     style="width: 210%;">
+    <ul class="easyui-tree" id="tt"></ul>
+</div>
+<div data-options="region:'center'">
+    <table class="easyui-datagrid" id="grid">
+        <thead>
+        <tr>
+            <th data-options="field:'id' , width:100">编号</th>
+            <th data-options="field:'name', width:90">名称</th>
+            <th data-options="field:'location',  width:50">位置</th>
+            <th data-options="field:'zhuangtai',width:100">状态(0代表正常 1代表异常)</th>
+            <th data-options="field:'model',width:100">产品型号</th>
+            <th data-options="field:'installation',width:100">安装位置</th>
+            <th data-options="field:'slaveId', width:90">从机编号</th>
+            <th data-options="field:'way',width:100">通讯方式(1代表串口 2代表Tcp/Ip)</th>
+            <th data-options="field:'address', width:100">Tcp/Ip通讯地址</th>
+            <th data-options="field:'port', width:100">Tcp/Ip通讯端口</th>
+            <th data-options="field:'connectTime', width:100">最长连接时间</th>
+            <th data-options="field:'readTime', width:100">最长响应时间</th>
+            <th data-options="field:'portName', width:50">串口号</th>
+            <th data-options="field:'boto', width:50">波特率</th>
+            <th data-options="field:'boxId',  width:50">电箱编号</th>
+            <th data-options="field:'comment',  width:100">备注</th>
+            <th data-options="field:'datameaningId', width:50">对应解析表Id</th>
+            <th data-options="field:'pid', width:60">父结点编号</th>
+            <th data-options="field:'isparent', width:100 ,formatter : function(value, rowData, index) {
+				   if (rowData.isparent == 1) {
+					return '是';
+				   } else {
+					return '否';
+				   }
+			      }">是否为父结点
+            </th>
+        </tr>
+        </thead>
+        <tbody id="chanpinList">
+
+        </tbody>
+    </table>
+    <div class="div2" id="div2">
+        <table class="easyui-datagrid" id="grid1" style="height:700px;">
+            <thead>
+            <tr>
+                <th data-options="field:'id' , width:100">编号</th>
+                <th data-options="field:'name', width:90">名称</th>
+                <th data-options="field:'location',  width:50">位置</th>
+                <th data-options="field:'zhuangtai',width:100">状态(0代表正常 1代表异常)</th>
+                <th data-options="field:'model',width:100">产品型号</th>
+                <th data-options="field:'installation',width:100">安装位置</th>
+                <th data-options="field:'slaveId', width:90">从机编号</th>
+                <th data-options="field:'way',width:100">通讯方式(1代表串口 2代表Tcp/Ip)</th>
+                <th data-options="field:'address', width:100">Tcp/Ip通讯地址</th>
+                <th data-options="field:'port', width:100">Tcp/Ip通讯端口</th>
+                <th data-options="field:'connectTime', width:100">最长连接时间</th>
+                <th data-options="field:'readTime', width:100">最长响应时间</th>
+                <th data-options="field:'portName', width:50">串口号</th>
+                <th data-options="field:'boto', width:50">波特率</th>
+                <th data-options="field:'boxId',  width:50">电箱编号</th>
+                <th data-options="field:'comment',  width:100">备注</th>
+                <th data-options="field:'datameaningId', width:100">对应解析表Id</th>
+                <th data-options="field:'pid', width:60">父结点编号</th>
+                <th data-options="field:'isparent', width:100 ,formatter : function(value, rowData, index) {
+				   if (rowData.isparent == 1) {
+					return '是';
+				   } else {
+					return '否';
+				   }
+			      }">是否为父结点
+                </th>
+            </tr>
+            </thead>
+            <tbody id="chanpinList1">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- 添加表单 -->
+<div id="insertDlg">
+    <form id="insertForm" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">名称:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">电箱编号:</td>
+                <td align="left"><input id="insert_boxId" name="boxId" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">安装位置:</td>
+                <td align="left"><input id="insert_installation" name="installation" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">备注:</td>
+                <td align="left"><input id="insert_comment" name="comment" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">从机编号:</td>
+                <td align="left"><input id="insert_slaveId" name="slaveId" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">通讯方式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true" editable="false"
+                                         id="insert_way" name="way"
+                                         onchange="test(this.value)">
+                    <option value="1">串口</option>
+                    <option value="2">Tcp/Ip</option>
+                </select>
+                </td>
+            </tr>
+            <tr id="insert_address" style="display:none">
+                <td align="right">Tcp/Ip通讯地址:</td>
+                <td align="left"><input name="address" type="text"/></td>
+            </tr>
+            <tr id="insert_port" style="display:none">
+                <td align="right">Tcp/Ip通讯端口:</td>
+                <td align="left"><input name="port" type="text"/></td>
+            </tr>
+            <tr id="insert_connectTime" style="display:none">
+                <td align="right">最长连接时间:</td>
+                <td align="left"><input name="connectTime" type="text"/></td>
+            </tr>
+            <tr id="insert_readTime" style="display:none">
+                <td align="right">最长响应时间:</td>
+                <td align="left"><input name="readTime" type="text"/></td>
+            </tr>
+            <tr id="insert_port" style="display:none">
+                <td align="right">Tcp/Ip通讯端口:</td>
+                <td align="left"><input name="port" type="text"/></td>
+            </tr>
+            <tr id="insert_portName" style="display:none">
+                <td align="right">串口号:</td>
+                <td align="left"><input name="portName" type="text"/></td>
+            </tr>
+            <tr id="insert_boto" style="display:none">
+                <td align="right">波特率:</td>
+                <td align="left"><input name="boto" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<div id="insertDlg2">
+    <form id="insertForm2" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">名称:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">型号:</td>
+                <td align="left"><input id="insert_model" name="model" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">解析表编号:</td>
+                <td align="left"><input id="insert_datameaningId" name="datameaningId" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="insertDlgTwo2">
+    <form id="insertFormTwo2" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">名称:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">型号:</td>
+                <td align="left"><input id="insert_model" name="model" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">解析表编号:</td>
+                <td align="left"><input id="insert_datameaningId" name="datameaningId" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="insertDlg1">
+    <form id="insertForm1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">位置信息:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="batchDlg">
+    <form id="batchForm" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="batchDlg1">
+    <form id="batchForm1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">批量增加的数量:</td>
+                <td align="left"><input id="insert_num" name="num" type="text"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="insertDlgTwo">
+    <form id="insertFormTwo" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">产品名称:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">电箱编号:</td>
+                <td align="left"><input id="insert_boxId" name="boxId" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">安装位置:</td>
+                <td align="left"><input id="insert_installation" name="installation" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">备注:</td>
+                <td align="left"><input id="insert_comment" name="comment" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">从机编号:</td>
+                <td align="left"><input id="insert_slaveId" name="slaveId" type="text"/></td>
+            </tr>
+            <tr>
+                <td align="right">是否报警:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true"
+
+                                         editable="false" id="insert_datameaningId"
+                                         name="datameaningId">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td align="right">通讯方式:</td>
+                <td align="left"><select data-options="panelHeight:'100',required:true" editable="false"
+                                         id="insert_way" name="way"
+                                         onchange="test(this.value)">
+                    <option value="1">串口</option>
+                    <option value="2">Tcp/Ip</option>
+                </select>
+                </td>
+            </tr>
+            <tr id="insert_address" style="display:none">
+                <td align="right">Tcp/Ip通讯地址:</td>
+                <td align="left"><input name="address" type="text"/></td>
+            </tr>
+            <tr id="insert_port" style="display:none">
+                <td align="right">Tcp/Ip通讯端口:</td>
+                <td align="left"><input name="port" type="text"/></td>
+            </tr>
+            <tr id="insert_connectTime" style="display:none">
+                <td align="right">最长连接时间:</td>
+                <td align="left"><input name="connectTime" type="text"/></td>
+            </tr>
+            <tr id="insert_readTime" style="display:none">
+                <td align="right">最长响应时间:</td>
+                <td align="left"><input name="readTime" type="text"/></td>
+            </tr>
+            <tr id="insert_portName" style="display:none">
+                <td align="right">串口号:</td>
+                <td align="left"><input name="portName" type="text"/></td>
+            </tr>
+            <tr id="insert_boto" style="display:none">
+                <td align="right">波特率:</td>
+                <td align="left"><input name="boto" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="insertDlgTwo1">
+    <form id="insertFormTwo1" method="post">
+        <table style="text-align: center;">
+            <tr>
+                <td align="right">位置信息:</td>
+                <td align="left"><input id="insert_name" name="name" type="text"/></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    //var admin=window.parent.admin;
+    loadtree();
+
+    function loadtree() {
+        var html1 = "";
+        //var root = admin.findAll();
+        var root = null;
+        $.ajax({
+            url: "findAll",
+            type: "post",
+            async: false,//此处需要注意的是要想获取ajax返回的值这个async属性必须设置成同步的，否则获取不到返回值
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                root = data;
+            }
+        });
+
+        var datameaningtree = root[0].children;
+        for (var i = 0; i < datameaningtree.length; i++) {
+            html1 += "<li id='" + datameaningtree[i].id + "'>"
+                + "<span>" + datameaningtree[i].text + "</span>";
+            var children = datameaningtree[i].children;
+            if (children.length > 0)
+                html1 += "<ul>";
+            for (var j = 0; j < children.length; j++) {
+                html1 += "<li id='" + children[j].id + "'><span>"
+                    + children[j].text + "</span>";
+                var child = children[j].children;
+                if (child.length > 0)
+                    html1 += "<ul>";
+                for (var k = 0; k < child.length; k++) {
+                    html1 += "<li id='" + child[k].id
+                        + "'><span>" + child[k].text
+                        + "</span>";
+
+                    html1 += "</li>";
+                }
+                if (child.length > 0)
+                    html1 += "</ul>";
+
+                html1 += "</li>";
+            }
+            if (children.length > 0)
+                html1 += "</ul>";
+            html1 += "</li>";
+        }
+        document.getElementById("tt").innerHTML = html1;
+        disposeTree();
+        loadDataGrid(-1);
+    }
+
+    function showChild() {
+
+        var rowData;
+        // 提交添加数据的表单
+        var pid = '';
+        var formData = $('#insertForm').serializeJSON();
+        if ($('#tt').tree('getSelected') == null) {
+            pid = '0';
+        } else {
+            rowData = $('#grid').datagrid('getData').rows[0];
+            pid = rowData.id;
+        }
+        //var list=admin.getAllSons(pid);
+        var list = null
+        Pid = '' + pid
+        $.ajax({
+            url: "getAllSons",
+            type: "post",
+            async: false,//此处需要注意的是要想获取ajax返回的值这个async属性必须设置成同步的，否则获取不到返回值
+            data: {"pid": Pid},
+            dataType: "json",
+            success: function (data) {
+                list = data;
+            }
+        });
+
+        var htmllist = "";
+        for (var i = 0; i < list.length; i++) {
+            htmllist += "<tr>" +
+                "<td></td>" +
+                "<td>" + list[i].id + "</td>" +
+                "<td>" + list[i].name + "</td>" +
+                "<td>" + list[i].location + "</td>" +
+                "<td>" + list[i].zhuangtai + "</td>" +
+                "<td>" + list[i].way + "</td>" +
+                "<td>" + list[i].address + "</td>" +
+                "<td>" + list[i].port + "</td>" +
+                "<td>" + list[i].portname + "</td>" +
+                "<td>" + list[i].boxid + "</td>" +
+                "<td>" + list[i].comment + "</td>" +
+                "<td>" + list[i].slaveid + "</td>" +
+                "<td>" + list[i].datameaningid + "</td>" +
+                "<td>" + list[i].pid + "</td>" +
+                "<td>" + list[i].isparent + "</td>" +
+                "</tr>";
+        }
+        ;
+        document.getElementById("childList").innerHTML = htmllist;
+
+        $('#childGrid').datagrid({
+            frozenColumns: [[{
+                field: 'ck',
+                checkbox: true
+            }]],
+            loading: true,
+            striped: true,
+            rownumbers: true,
+            singleSelect: true
+        });
+
+        $('#showChildDlg').dialog('open');
+
+    }
+</script>
+</body>
+</html>

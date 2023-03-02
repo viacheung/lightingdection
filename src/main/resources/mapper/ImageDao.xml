@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanjing.lightingdection.dao.ImageDao">
+    <!-- 根据user_code和user_pwd查询user表 -->
+
+    <select id="queryById" parameterType="Integer" resultType="com.nanjing.lightingdection.entity.Image">
+        select * from image
+        where
+        id=#{id}
+    </select>
+
+    <select id="queryAll" resultType="com.nanjing.lightingdection.entity.Image">
+		select * from image
+	</select>
+
+    <insert id="insertImage" parameterType="com.nanjing.lightingdection.entity.Image">
+        insert into image
+        values
+        (null
+        <if test='name!=null'>
+            ,#{name}
+        </if>
+        <if test='name==null'>
+            ,null
+        </if>
+        <if test='url!=null'>
+            ,#{url}
+        </if>
+        <if test='url==null'>
+            ,null
+        </if>
+        <if test='dots!=null'>
+            ,#{dots}
+        </if>
+        <if test='dots==null'>
+            ,null
+        </if>
+        <if test='dotsize!=null'>
+            ,#{dotsize}
+        </if>
+        <if test='dotsize==null'>
+            ,20
+        </if>
+        );
+    </insert>
+
+
+    <!-- 更新用户信息根据与用户编号 -->
+    <update id="updateImage" parameterType="com.nanjing.lightingdection.entity.Image">
+        update image set
+        <if test='name!=null'>
+            name = #{name}
+        </if>
+        <if test='url!=null'>
+            ,url = #{url}
+        </if>
+        <if test='dots!=null'>
+            ,dots = #{dots}
+        </if>
+        <if test='dotsize!=null'>
+            ,dotsize = #{dotsize}
+        </if>
+        where
+        <if test='id!=null'>
+            id = #{id}
+        </if>
+    </update>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteImageById" parameterType="Integer">
+        delete from Image where id=#{id}
+    </delete>
+
+</mapper>
